@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - InternQuest</title>
+    <link rel="icon" href="https://placehold.co/32x32/2a6fdb/ffffff?text=IQ" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <header class="navbar">
+        <a href="index.html" class="logo">
+            <img src="logo.jpg" alt="InternQuest Logo" style="height: 70px; border-radius: 15px;">
+        </a>
+        <nav>
+            <span id="adminName" class="user-name">Admin</span>
+            <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <div id="messageContainer" class="message-container"></div>
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+
+        <section id="authSection" class="auth-section card">
+            <div class="auth-card">
+                <h2>Admin Login</h2>
+                <form id="authForm">
+                    <input type="email" id="authEmail" placeholder="Email" required>
+                    <input type="password" id="authPassword" placeholder="Password" required>
+                    <button type="submit" class="btn btn-primary btn-full-width">Login</button>
+                </form>
+            </div>
+        </section>
+
+        <div id="adminDashboard" class="dashboard" style="display: none;">
+            <aside class="sidebar">
+                <button class="sidebar-btn" data-section="manageStudents">
+                    <i class="fas fa-user-graduate"></i> Manage Students
+                </button>
+                <button class="sidebar-btn" data-section="manageCompanies">
+                    <i class="fas fa-industry"></i> Manage Companies
+                </button>
+                <button class="sidebar-btn" data-section="manageInternships">
+                    <i class="fas fa-briefcase"></i> Manage Internships
+                </button>
+                <button class="sidebar-btn" data-section="manageApplications">
+                    <i class="fas fa-tasks"></i> Manage Applications
+                </button>
+                <button class="sidebar-btn" data-section="manageAptitudeTest">
+                    <i class="fas fa-question-circle"></i> Manage Aptitude Test
+                </button>
+                <button class="sidebar-btn" data-section="managePayments">
+                    <i class="fas fa-receipt"></i> Manage Payments
+                </button>
+                <button class="sidebar-btn active" data-section="cms">
+                    <i class="fas fa-file-alt"></i> CMS
+                </button>
+            </aside>
+
+            <div class="main-content">
+                <section id="manageStudents" class="dashboard-section card" style="display: none;">
+                    <h2>Manage Students</h2>
+                    <div id="studentList"></div>
+                </section>
+
+                <section id="manageCompanies" class="dashboard-section card" style="display: none;">
+                    <h2>Manage Companies</h2>
+                    <div id="companyList"></div>
+                </section>
+
+                <section id="manageInternships" class="dashboard-section card" style="display: none;">
+                    <h2>Manage Internships</h2>
+                    <div id="internshipList"></div>
+                    <form id="addInternshipForm">
+                        <h3>Add New Internship</h3>
+                        <label for="adminInternshipTitle">Title</label>
+                        <input type="text" id="adminInternshipTitle" required>
+                        <label for="adminInternshipDescription">Description</label>
+                        <textarea id="adminInternshipDescription" rows="3" required></textarea>
+                        <label for="adminInternshipCompany">Company</label>
+                        <select id="adminInternshipCompany" required></select>
+                        <button type="submit" class="btn btn-primary">Add Internship</button>
+                    </form>
+                </section>
+
+                <section id="manageApplications" class="dashboard-section card" style="display: none;">
+                    <h2>Manage Applications</h2>
+                    <div class="filter-controls">
+                        <label for="statusFilter">Filter by Status:</label>
+                        <select id="statusFilter">
+                            <option value="All">All</option>
+                            <option value="Pending Admin Approval">Pending Admin Approval</option>
+                            <option value="Pending Company Approval">Pending Company Approval</option>
+                            <option value="Selected">Selected</option>
+                            <option value="Payment Complete">Payment Complete</option>
+                            <option value="Ongoing">Ongoing</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div id="applicationsList"></div>
+                </section>
+
+                <section id="manageAptitudeTest" class="dashboard-section card" style="display: none;">
+                    <h2>Manage Aptitude Test</h2>
+                    <div id="questionsList"></div>
+                    <form id="addQuestionForm">
+                        <h3>Add New Question</h3>
+                        <label for="questionText">Question</label>
+                        <input type="text" id="questionText" required>
+                        <label for="optionA">Option A</label>
+                        <input type="text" id="optionA" required>
+                        <label for="optionB">Option B</label>
+                        <input type="text" id="optionB" required>
+                        <label for="optionC">Option C</label>
+                        <input type="text" id="optionC" required>
+                        <label for="correctOption">Correct Option (A/B/C)</label>
+                        <input type="text" id="correctOption" required pattern="[A-C]">
+                        <button type="submit" class="btn btn-primary">Add Question</button>
+                    </form>
+                </section>
+
+                <section id="managePayments" class="dashboard-section card" style="display: none;">
+                    <h2>Manage Payments</h2>
+                    <div id="paymentsList"></div>
+                </section>
+
+                <section id="cms" class="dashboard-section card active">
+                    <h2>CMS (Content Management)</h2>
+                    <form id="cmsForm">
+                        <h3>Update Homepage Hero Section</h3>
+                        <label for="heroTitle">Hero Title</label>
+                        <input type="text" id="heroTitle">
+                        <label for="heroDescription">Hero Description</label>
+                        <textarea id="heroDescription" rows="3"></textarea>
+                        <button type="submit" class="btn btn-primary">Update Homepage</button>
+                    </form>
+                    <div class="divider"></div>
+                    <h3>FAQ Management</h3>
+                    <form id="addFaqForm">
+                        <label for="faqQuestion">Question</label>
+                        <input type="text" id="faqQuestion" required>
+                        <label for="faqAnswer">Answer</label>
+                        <textarea id="faqAnswer" rows="3" required></textarea>
+                        <button type="submit" class="btn btn-primary">Add FAQ</button>
+                    </form>
+                    <div id="faqList"></div>
+                    <div class="divider"></div>
+                    <h3>Contact Messages</h3>
+                    <div id="contactMessagesList"></div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 InternQuest. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js" type="module"></script>
+</body>
+</html>

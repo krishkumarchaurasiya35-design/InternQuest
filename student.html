@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - InternQuest</title>
+    <link rel="icon" href="https://placehold.co/32x32/2a6fdb/ffffff?text=IQ" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <header class="navbar">
+        <a href="index.html" class="logo">
+            <img src="logo.jpg" alt="InternQuest Logo" style="height: 70px; border-radius: 15px;">
+        </a>
+        <nav>
+            <span id="studentName" class="user-name"></span>
+            <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <div id="messageContainer" class="message-container"></div>
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+
+        <section id="authSection" class="auth-section card">
+            <div class="auth-card">
+                <h2 id="authHeading">Student Login</h2>
+                <form id="authForm">
+                    <input type="email" id="authEmail" placeholder="Email" required>
+                    <input type="password" id="authPassword" placeholder="Password" required>
+                    <input type="text" id="authName" placeholder="Full Name" style="display: none;">
+                    <button type="submit" class="btn btn-primary btn-full-width">Login</button>
+                </form>
+                <p class="auth-toggle">
+                    Don't have an account? <a href="#" id="toggleAuth">Register here</a>
+                </p>
+            </div>
+        </section>
+
+        <div id="studentDashboard" class="dashboard" style="display: none;">
+            <aside class="sidebar">
+                <button class="sidebar-btn" data-section="profile">
+                    <i class="fas fa-user-circle"></i> My Profile
+                </button>
+                <button class="sidebar-btn" data-section="aptitudeTest">
+                    <i class="fas fa-laptop-code"></i> Aptitude Test
+                </button>
+                <button class="sidebar-btn" data-section="internships">
+                    <i class="fas fa-briefcase"></i> Available Internships
+                </button>
+                <button class="sidebar-btn" data-section="applications">
+                    <i class="fas fa-tasks"></i> My Applications
+                </button>
+                <button id="enrolledCompanyBtn" class="sidebar-btn" data-section="enrolledCompany" style="display:none;">
+                    <i class="fas fa-building"></i> My Internships
+                </button>
+                <button id="paymentSidebarBtn" class="sidebar-btn" data-section="payment" style="display:none;">
+                    <i class="fas fa-credit-card"></i> Payment
+                </button>
+            </aside>
+
+            <div class="main-content">
+                <section id="profile" class="dashboard-section card active">
+                    <h2>My Profile (All fields mandatory)</h2>
+                    <form id="profileForm">
+                        <label for="studentNameInput">Full Name</label>
+                        <input type="text" id="studentNameInput" required>
+
+                        <label for="studentEmailInput">Email</label>
+                        <input type="email" id="studentEmailInput" readonly>
+
+                        <label for="studentPhoneInput">Phone</label>
+                        <input type="tel" id="studentPhoneInput" required>
+
+                        <label for="studentDobInput">Date of Birth</label>
+                        <input type="date" id="studentDobInput" required>
+
+                        <label for="studentAddressInput">Address</label>
+                        <textarea id="studentAddressInput" rows="3" required></textarea>
+
+                        <label for="studentStreamInput">12th Stream</label>
+                        <select id="studentStreamInput" required>
+                            <option value="">Select Stream</option>
+                            <option value="Science">Science</option>
+                            <option value="Commerce">Commerce</option>
+                            <option value="Arts">Arts</option>
+                            <option value="Others">Others</option>
+                        </select>
+                        <input type="text" id="studentOtherStreamInput" placeholder="Specify your stream" style="display: none;">
+
+                        <label for="studentMarksInput">Expected 12th Marks (%)</label>
+                        <input type="number" id="studentMarksInput" min="0" max="100" required>
+                        
+                        <div class="divider"></div>
+                        <h3>Bank Details (Mandatory for Payments)</h3>
+                        
+                        <label for="bankNameInput">Bank Name</label>
+                        <input type="text" id="bankNameInput" required>
+                        
+                        <label for="accountHolderNameInput">Account Holder Name</label>
+                        <input type="text" id="accountHolderNameInput" required>
+                        
+                        <label for="accountNumberInput">Account Number</label>
+                        <input type="text" id="accountNumberInput" required>
+                        
+                        <label for="bankBranchInput">Bank Branch</label>
+                        <input type="text" id="bankBranchInput" required>
+                        
+                        <label for="ifscCodeInput">IFSC Code</label>
+                        <input type="text" id="ifscCodeInput" required>
+
+                        <button type="submit" class="btn btn-primary">Save Profile</button>
+                    </form>
+                </section>
+
+                <section id="aptitudeTest" class="dashboard-section card" style="display: none;">
+                    <h2>Aptitude Test</h2>
+                    <div id="testContainer">
+                        <div class="test-intro">
+                            <h3>Instructions</h3>
+                            <p>You have 10 minutes to complete the test. There are 15 multiple-choice questions. Good luck!</p>
+                            <p>You must score at least 12 correct answers to be eligible for internships.</p>
+                            <button id="startTestBtn" class="btn btn-primary">Start Test</button>
+                        </div>
+                    </div>
+                    <div id="testResult" style="display: none;">
+                        <h3>Test Completed!</h3>
+                        <p>Your score is <span id="testScore"></span> / 15.</p>
+                        <p id="testStatus"></p>
+                    </div>
+                </section>
+
+                <section id="internships" class="dashboard-section card" style="display: none;">
+                    <h2>Available Internships</h2>
+                    <div id="internshipList"></div>
+                </section>
+                
+                <section id="enrolledCompany" class="dashboard-section card" style="display: none;">
+                    <h2>My Internships</h2>
+                    <div id="enrolledCompanyList"></div>
+                </section>
+
+                <section id="applications" class="dashboard-section card" style="display: none;">
+                    <h2>My Applications</h2>
+                    <div id="myApplicationsList"></div>
+                </section>
+
+                <section id="payment" class="dashboard-section card" style="display: none;">
+                    <h2>Payment</h2>
+                    <div id="paymentDetails" class="payment-container">
+                        <p>Selected for: <strong id="internshipTitlePayment"></strong> at <strong id="companyNamePayment"></strong></p>
+                        <p>Payment required to generate Offer Letter.</p>
+                        <p class="payment-amount">Amount: <strong>₹149</strong></p>
+                        <button id="payNowBtn" class="btn btn-primary btn-full-width">Pay Now</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 InternQuest. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js" type="module"></script>
+</body>
+</html>
