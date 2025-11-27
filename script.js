@@ -6,7 +6,7 @@ import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where,
 // Global variables provided by the platform
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 const firebaseConfig = {
-    apiKey: "AIzaSyA1w7fPrXlw_I9tZYvzBTOfLKoJvjNrjPY",
+    apiKey: "",
     authDomain: "krish-11166.firebaseapp.com",
     projectId: "krish-11166",
     storageBucket: "krish-11166.firebasestorage.app",
@@ -2472,3 +2472,4 @@ document.addEventListener('DOMContentLoaded', () => {
         loadLandingPageData();
     }
 });
+
